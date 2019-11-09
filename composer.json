@@ -1,0 +1,24 @@
+{
+  "name": "akiosarkiz/sqlbuild",
+  "description": "sql query builder",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/akiosarkiz/sqlbuild",
+
+  "require": {
+    "php": ">=5.3",
+    "composer-plugin-api": "^1.0"
+  },
+
+  "autoload": {
+    "classmap": [
+      "src\\",
+      "src\\classes",
+      "src\\collections"
+    ]
+  },
+
+  "extra": {
+    "class": "SQLBuild\\PluginInstaller"
+  }
+}
