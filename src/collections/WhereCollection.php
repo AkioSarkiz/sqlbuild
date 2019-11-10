@@ -23,7 +23,16 @@ final class WhereCollection extends AbstractCollection
 	    $temp = 'WHERE';
 
         foreach ($this->objs as $obj)
-            $temp .= $obj->render();
+        {
+            $forTest4length = substr($temp, strlen($temp)-4, 4);
+            $forTest3length = substr($temp, strlen($temp)-3, 3);
+
+            if ($forTest4length == ' AND' || $forTest3length == ' OR' || $forTest4length == 'HERE')
+                $temp .= $obj->render();
+            else
+                throw new \Exception('error operator: ' . $forTest4length);
+        }
+
         
         return $temp;
 	}

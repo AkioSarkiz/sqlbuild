@@ -33,6 +33,9 @@ final class Value
      */
     public function render(): String
     {
+        if (strlen($this->value) == 0)
+            throw new Exception('empty value');
+
         // для bool и int конвертация в string
         $this->value = (is_bool($this->value)) ? ($this->value) ? 'true' : 'false' : (is_int($this->value)) ? (String)$this->value : $this->value;
 
@@ -46,10 +49,8 @@ final class Value
             case SQLType::AUTO:
                 if (preg_match('/[0-9]/', $this->value) || preg_match('/^true$|^false$/', $this->value)) {
                     return $this->value;
-                } elseif (preg_match('/[a-zA-Z]/', $this->value)) {
-                    return SQLType::validStr($this->value);
                 } else {
-                    throw new Exception("Error Processing Request", 1);
+                    return sprintf('"%s"', SQLType::validStr($this->value));
                 }
 
             /*
@@ -57,14 +58,20 @@ final class Value
             | Для случаев, когда тип уже указан
             |-----------------------------------------------------------------------------------------------------------------
             */
-            case SQLType::INT:
             case SQLType::BOOL:
-                return $this->value;
+                if ($this->value == 'true' || $this->value == 'false') {
+                    return $this->value;
+                }else {
+                    throw new Exception('value: ' . $this->value . ' isn\'t bool type');
+                }
+            case SQLType::INT:
+                return (string)(int)$this->value;
             case SQLType::STRING:
-                return SQLType::validStr($this->value);
-
+                return sprintf('"%s"', SQLType::validStr($this->value));
+            case SQLType::ARG:
+                return sprintf('`%s`', $this->value);
             default:
-                throw new Exception("Error!", 1);
+                throw new Exception();
         }
     }
 }

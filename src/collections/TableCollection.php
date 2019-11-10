@@ -18,4 +18,9 @@ final class TableCollection extends AbstractCollection
     {
         return '`' . implode($this->objs, '`,`') . '`';
     }
+
+    public function count(): int
+    {
+        return count($this->objs);
+    }
 }

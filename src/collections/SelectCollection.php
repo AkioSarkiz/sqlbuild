@@ -24,12 +24,8 @@ final class SelectCollection
      */
 	public function render(): String 
 	{
-		if ($this->objs[0] == self::ALL) {
-			if (count($this->objs) == 1) {
-				return ' * ';
-			}else{
-				throw new Exception("Error Processing Request", 1);
-			}
+		if ($this->objs[0] == self::ALL || count($this->objs) == 0) {
+		    return '*';
 		}
 		return '`' . implode($this->objs, '`,`') . '`';
 	}

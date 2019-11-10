@@ -16,11 +16,11 @@ final class ValueCollection extends AbstractCollection
 	{
 		foreach ($this->objs as $obj) {
             try {
-                $this->temp .= $obj->render();
+                $this->temp .= $obj->render() . ',';
             } catch (Exception $e) {
                 throw $e;
             }
         }
-		return $this->temp;
+		return substr($this->temp, 0, -1);
 	}
 }

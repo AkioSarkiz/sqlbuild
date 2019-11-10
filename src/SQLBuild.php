@@ -57,6 +57,12 @@ final class SQLBuild
         return $this;
     }
 
+    public function addColumn(String ...$arr): SQLBuild
+    {
+        $this->columnCollection = new ColumnCollection($arr);
+        return $this;
+    }
+
     public function addValue(Value ...$obj): SQLBuild
     {
         $this->valueCollection = new ValueCollection($obj);
@@ -151,16 +157,17 @@ final class SQLBuild
             $renderTable = ($this->tableCollection) ? $this->tableCollection->render() : '';
             $renderColumn = ($this->columnCollection) ? $this->columnCollection->render() : '';
             $renderValue = ($this->valueCollection) ? $this->valueCollection->render() : '';
-            $renderSort = ($this->sortCollection) ? $this->sortCollection->render() : '';
 
             if ($renderTable == '')
                 throw new Exception('please, add table');
+            elseif ($this->tableCollection->count() > 1)
+                throw new Exception('max tables = 1, your collection have ' . $this->tableCollection->count() . ' tables');
             elseif ($renderValue == '')
                 throw new Exception('please, add values');
 
             return sprintf(
-                'INSERT INTO %s%s VALUES (%s) %s;',
-                $renderTable, $renderColumn, $renderValue, $renderSort
+                'INSERT INTO %s%s VALUES (%s);',
+                $renderTable, $renderColumn, $renderValue
             );
         } catch (Exception $e) {
             throw $e;
@@ -177,7 +184,6 @@ final class SQLBuild
         $renderTable = ($this->tableCollection) ? $this->tableCollection->render() : '';
         $renderSet = ($this->setCollection) ? $this->setCollection->render() : '';
         $renderWhere = ($this->whereCollection) ? $this->whereCollection->render() : '';
-        $renderSort = ($this->sortCollection) ? $this->sortCollection->render() : '';
 
         if ($renderTable == '')
             throw new Exception('please, add table');
@@ -186,8 +192,8 @@ final class SQLBuild
 
         try {
             return sprintf(
-                'UPDATE %s %s %s %s;',
-                $renderTable, $renderSet, $renderWhere, $renderSort
+                'UPDATE %s %s %s;',
+                $renderTable, $renderSet, $renderWhere
             );
         } catch (Exception $e) {
             exit('error!');

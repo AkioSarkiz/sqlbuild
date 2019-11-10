@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace SQLBuild;
 
 
+use Exception;
+
 /**
  * Class Where подкласс для класса SQLBuild
  * @see SQLBuild
@@ -46,6 +48,9 @@ final class Where
      */
     private function createSQlValue(String $value, int $type): String
     {
+        if (strlen($value) == 0)
+            throw new Exception('empty value');
+
         switch ($type) {
 
             /*
@@ -54,16 +59,12 @@ final class Where
              |-----------------------------------------------------------------------------------------------------------------
              */
             case SQLType::AUTO:
-                if (preg_match('/[0-9]/', $value) || preg_match('[^true$|^false$]', $value)) {
+                if (preg_match('/^[0-9]*$/', $value) || preg_match('[^true$|^false$]', $value)) {
                     return $value;
                 }
-                elseif (preg_match('/[a-zA-Z]/', $value)) {
+                else {
                     return sprintf('"%s"', SQLType::validStr($value));
                 }
-                else {
-                    exit('error `52dsa`');
-                }
-
 
 
             /*
@@ -72,14 +73,19 @@ final class Where
             |-----------------------------------------------------------------------------------------------------------------
             */
             case SQLType::BOOL:
+                if ($value == 'true' || $value == 'false') {
+                    return $value;
+                }else {
+                    throw new Exception('value: ' . $value . ' isn\'t bool type');
+                }
             case SQLType::INT:
-                return $value;
+                return (string)(int)$value;
             case SQLType::STRING:
                 return sprintf('"%s"', SQLType::validStr($value));
             case SQLType::ARG:
                 return sprintf('`%s`', $value);
             default:
-                exit('error `54dsa`');
+                throw new Exception();
         }
     }
 

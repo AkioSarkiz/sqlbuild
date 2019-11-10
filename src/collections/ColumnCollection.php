@@ -8,7 +8,7 @@ namespace SQLBuild;
 
 final class ColumnCollection extends AbstractCollection
 {
-    public function __construct(String ...$objs){ $this->objs = $objs; }
+    public function __construct(array $objs){ $this->objs = $objs; }
 
 
     /**
@@ -17,6 +17,6 @@ final class ColumnCollection extends AbstractCollection
      */
     public function render(): String
     {
-        return '`' . implode($this->objs, '`,`') . '`';
+        return '(`' . implode($this->objs, '`,`') . '`)';
     }
 }
