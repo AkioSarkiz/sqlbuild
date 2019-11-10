@@ -4,11 +4,11 @@ namespace SQLBuild;
 
 final class SetCollection extends AbstractCollection
 {
-	public function __construct(Set ...$index){ $this->objs = $index; }
+	public function __construct(array $objs){ $this->objs = $objs; }
 
 	public function render(): String
 	{
-		$temp = null;
+		$temp = 'SET';
 		foreach ($this->objs as $obj) {
 			$temp .= $obj->render() . ',';
 		}

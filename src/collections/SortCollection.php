@@ -6,7 +6,7 @@ declare(strict_types = 1);
 namespace SQLBuild;
 
 
-class SortCollection extends AbstractCollection
+final class SortCollection extends AbstractCollection
 {
     private $type;
 
@@ -21,7 +21,7 @@ class SortCollection extends AbstractCollection
     public function __construct(array $strings, int $sort = SQLOperator::ASC)
     {
         $this->objs = $strings;
-        $this->type = (SQLOperator::ASC) ? 'ASC' : 'DECS';
+        $this->type = (SQLOperator::ASC == $sort) ? 'ASC' : 'DECS';
     }
 
     /**
@@ -31,6 +31,6 @@ class SortCollection extends AbstractCollection
     public function render(): String
     {
         return (count($this->objs) == 0) ?  '' :
-            'ORDER BY `' . implode($this->objs, '`,`') . '`' . $this->type;
+            'ORDER BY `' . implode($this->objs, '`,`') . '` ' . $this->type;
     }
 }

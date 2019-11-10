@@ -6,12 +6,8 @@ declare(strict_types=1);
 namespace SQLBuild;
 
 
-use SQLBuild\ColumnCollection;
-use SQLBuild\SelectCollection;
-use SQLBuild\SetCollection;
-use SQLBuild\TableCollection;
-use SQLBuild\ValueCollection;
-use SQLBuild\WhereCollection;
+use Exception;
+
 
 /**
  * Class [SQLGenerate || SQLG] создан для упращение создания SQL запросов.
@@ -61,6 +57,12 @@ final class SQLBuild
         return $this;
     }
 
+    public function addValue(Value ...$obj): SQLBuild
+    {
+        $this->valueCollection = new ValueCollection($obj);
+        return $this;
+    }
+
     /**
      * Для SELECT|INSERT метода
      *
@@ -88,12 +90,18 @@ final class SQLBuild
     /**
      * Для SELECT|INSERT метода
      *
-     * @param WhereCollection $index
+     * @param Where[] $objs
      * @return SQLBuild
      */
     public function addWhere(Where ...$objs): SQLBuild
     {
         $this->whereCollection = new WhereCollection($objs);
+        return $this;
+    }
+
+    public function addSet(Set ...$objs): SQLBuild
+    {
+        $this->setCollection = new SetCollection($objs);
         return $this;
     }
 
@@ -115,15 +123,20 @@ final class SQLBuild
     public function getSelect(): String
     {
         try {
+            $renderSelect = ($this->selectCollection) ? $this->selectCollection->render() : '*';
+            $renderTable = ($this->tableCollection) ? $this->tableCollection->render() : '';
+            $renderWhere = ($this->whereCollection)? $this->whereCollection->render() : '';
+            $renderSort = ($this->sortCollection) ? $this->sortCollection->render() : '';
+
+            if ($renderTable == '')
+                throw new Exception('please, add table');
+
             return sprintf(
-                'SELECT%sFROM%sWHERE%s%s',
-                $this->selectCollection->render(),
-                $this->tableCollection->render(),
-                $this->whereCollection->render(),
-                $this->selectCollection->render()
+                'SELECT %s FROM %s %s %s',
+                $renderSelect, $renderTable, $renderWhere, $renderSort
             );
-        } catch (\Exception $e) {
-            exit('error!');
+        } catch (Exception $e) {
+            throw $e;
         } finally {
             // Проверка на чистку таблиц.
             // Сделано в finaly потому что нам
@@ -135,15 +148,22 @@ final class SQLBuild
     public function getInsert(): String
     {
         try {
+            $renderTable = ($this->tableCollection) ? $this->tableCollection->render() : '';
+            $renderColumn = ($this->columnCollection) ? $this->columnCollection->render() : '';
+            $renderValue = ($this->valueCollection) ? $this->valueCollection->render() : '';
+            $renderSort = ($this->sortCollection) ? $this->sortCollection->render() : '';
+
+            if ($renderTable == '')
+                throw new Exception('please, add table');
+            elseif ($renderValue == '')
+                throw new Exception('please, add values');
+
             return sprintf(
-                'INSERT INTO %s%s VALUES (%s)%s;',
-                $this->tableCollection->render(),
-                $this->columnCollection->render(),
-                $this->valueCollection->render(),
-                $this->selectCollection->render()
+                'INSERT INTO %s%s VALUES (%s) %s;',
+                $renderTable, $renderColumn, $renderValue, $renderSort
             );
-        } catch (\Exception $e) {
-            exit('error!');
+        } catch (Exception $e) {
+            throw $e;
         }finally {
             // Проверка на чистку таблиц.
             // Сделано в finaly потому что нам
@@ -154,15 +174,22 @@ final class SQLBuild
 
     public function getUpdate(): String
     {
+        $renderTable = ($this->tableCollection) ? $this->tableCollection->render() : '';
+        $renderSet = ($this->setCollection) ? $this->setCollection->render() : '';
+        $renderWhere = ($this->whereCollection) ? $this->whereCollection->render() : '';
+        $renderSort = ($this->sortCollection) ? $this->sortCollection->render() : '';
+
+        if ($renderTable == '')
+            throw new Exception('please, add table');
+        elseif ($renderSet == '')
+            throw new Exception('please, add set');
+
         try {
             return sprintf(
-                'UPDATE%s SET%s WHERE%s%s;',
-                $this->tableCollection ->render(),
-                $this->setCollection   ->render(),
-                $this->whereCollection ->render(),
-                $this->selectCollection->render()
+                'UPDATE %s %s %s %s;',
+                $renderTable, $renderSet, $renderWhere, $renderSort
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             exit('error!');
         } finally {
             // Проверка на чистку таблиц.

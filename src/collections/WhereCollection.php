@@ -5,9 +5,6 @@ namespace SQLBuild;
 
 final class WhereCollection extends AbstractCollection
 {
-	/** @var string */
-	private $temp = '';
-
 	public function __construct(array $objs) { $this->objs = $objs; }
 
 
@@ -23,9 +20,11 @@ final class WhereCollection extends AbstractCollection
      */
 	public function render (): String
 	{
+	    $temp = 'WHERE';
+
         foreach ($this->objs as $obj)
-            $this->temp .= $obj->render();
+            $temp .= $obj->render();
         
-        return $this->temp;
+        return $temp;
 	}
 }

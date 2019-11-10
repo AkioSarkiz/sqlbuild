@@ -12,9 +12,9 @@
 
   "autoload": {
     "classmap": [
-      "src\\",
-      "src\\classes",
-      "src\\collections"
+      "src/",
+      "src/classes",
+      "src/collections"
     ]
   },
 
