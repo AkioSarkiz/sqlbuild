@@ -8,7 +8,9 @@ $baseDir = dirname($vendorDir);
 return array(
     'SQLBuild\\AbstractCollection' => $baseDir . '/src/collections/AbstractCollection.php',
     'SQLBuild\\Activity' => $baseDir . '/src/Activity.php',
+    'SQLBuild\\CollectionLimit' => $baseDir . '/src/collections/CollectionLimit.php',
     'SQLBuild\\ColumnCollection' => $baseDir . '/src/collections/ColumnCollection.php',
+    'SQLBuild\\GroupByCollection' => $baseDir . '/src/collections/GroupByCollection.php',
     'SQLBuild\\SQLBuild' => $baseDir . '/src/SQLBuild.php',
     'SQLBuild\\SQLOperator' => $baseDir . '/src/SQLOperator.php',
     'SQLBuild\\SQLType' => $baseDir . '/src/SQLType.php',

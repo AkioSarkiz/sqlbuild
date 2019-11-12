@@ -39,6 +39,10 @@ final class SQLBuild
     private $tableCollection;
     /** @var SortCollection */
     private $sortCollection;
+    /** @var CollectionLimit */
+    private $limitCollection;
+    /** @var GroupByCollection */
+    private $groupByCollection;
 
     /**
      * Освобождение памяти
@@ -60,6 +64,18 @@ final class SQLBuild
     public function addColumn(String ...$arr): SQLBuild
     {
         $this->columnCollection = new ColumnCollection($arr);
+        return $this;
+    }
+
+    public function addLimit($max): SQLBuild
+    {
+        $this->limitCollection = new CollectionLimit($max);
+        return $this;
+    }
+
+    public function addGroupBy($input): SQLBuild
+    {
+        $this->groupByCollection = new GroupByCollection($input);
         return $this;
     }
 
@@ -133,13 +149,15 @@ final class SQLBuild
             $renderTable = ($this->tableCollection) ? $this->tableCollection->render() : '';
             $renderWhere = ($this->whereCollection)? $this->whereCollection->render() : '';
             $renderSort = ($this->sortCollection) ? $this->sortCollection->render() : '';
+            $renderLimit = ($this->limitCollection) ? $this->limitCollection->render() : '';
+            $renderGroupBy = ($this->groupByCollection) ? $this->groupByCollection->render() : '';
 
             if ($renderTable == '')
                 throw new Exception('please, add table');
 
             return sprintf(
-                'SELECT %s FROM %s %s %s',
-                $renderSelect, $renderTable, $renderWhere, $renderSort
+                'SELECT %s FROM %s %s %s %s %s',
+                $renderSelect, $renderTable, $renderWhere, $renderGroupBy, $renderSort, $renderLimit
             );
         } catch (Exception $e) {
             throw $e;

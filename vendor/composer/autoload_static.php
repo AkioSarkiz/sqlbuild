@@ -9,7 +9,9 @@ class ComposerStaticInita9e10875dea1e6fce4b119b94e23a1c8
     public static $classMap = array (
         'SQLBuild\\AbstractCollection' => __DIR__ . '/../..' . '/src/collections/AbstractCollection.php',
         'SQLBuild\\Activity' => __DIR__ . '/../..' . '/src/Activity.php',
+        'SQLBuild\\CollectionLimit' => __DIR__ . '/../..' . '/src/collections/CollectionLimit.php',
         'SQLBuild\\ColumnCollection' => __DIR__ . '/../..' . '/src/collections/ColumnCollection.php',
+        'SQLBuild\\GroupByCollection' => __DIR__ . '/../..' . '/src/collections/GroupByCollection.php',
         'SQLBuild\\SQLBuild' => __DIR__ . '/../..' . '/src/SQLBuild.php',
         'SQLBuild\\SQLOperator' => __DIR__ . '/../..' . '/src/SQLOperator.php',
         'SQLBuild\\SQLType' => __DIR__ . '/../..' . '/src/SQLType.php',
