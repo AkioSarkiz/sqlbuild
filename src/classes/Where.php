@@ -1,15 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 
 namespace SQLBuild;
 
 
 use Exception;
 
+
 /**
- * Class Where подкласс для класса SQLBuild
+ * Class Where - установка фильтра запрсоа
  * @see SQLBuild
  * @package Lib
  */
@@ -45,6 +44,7 @@ final class Where
      * @param String $value
      * @param int $type
      * @return String
+     * @throws Exception
      */
     private function createSQlValue(String $value, int $type): String
     {
@@ -63,7 +63,7 @@ final class Where
                     return $value;
                 }
                 else {
-                    return sprintf('"%s"', SQLType::validStr($value));
+                    return sprintf('"%s"', SQLType::stringArg($value));
                 }
 
 
@@ -81,7 +81,7 @@ final class Where
             case SQLType::INT:
                 return (string)(int)$value;
             case SQLType::STRING:
-                return sprintf('"%s"', SQLType::validStr($value));
+                return sprintf('"%s"', SQLType::stringArg($value));
             case SQLType::ARG:
                 return sprintf('`%s`', $value);
             default:
@@ -111,12 +111,19 @@ final class Where
         elseif (preg_match('(!=)', $this->value)) $operator = '!=';
         elseif (preg_match('(=)', $this->value)) $operator = '=';
 
-        return sprintf(
-            $template,
-            // скорее всего это аргумент `arg`.. поэтому при SQLG::AUTO делаем SQLG:ARG
-            // чтоб не опеределил как string
-            $this->createSQlValue($matches[0][0], ($this->type1 == SQLType::AUTO) ? SQLType::ARG : $this->type1),
-            $operator,
-            $this->createSQlValue($matches[0][1], $this->type2));
+        try {
+            if (count($matches[0]) != 2)
+                throw new Exception('Where need 2 arg', 5);
+
+            return sprintf(
+                $template,
+                // скорее всего это аргумент `arg`.. поэтому при SQLG::AUTO делаем SQLG:ARG
+                // чтоб не опеределил как string
+                $this->createSQlValue($matches[0][0], ($this->type1 == SQLType::AUTO) ? SQLType::ARG : $this->type1),
+                $operator,
+                $this->createSQlValue($matches[0][1], $this->type2));
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 }

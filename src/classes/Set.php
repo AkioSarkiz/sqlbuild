@@ -1,17 +1,28 @@
 <?php
 
-declare(strict_types=1);
-
 
 namespace SQLBuild;
 
 
+use Exception;
+
+
+/**
+ * Class Set - установка значения для UPDATE
+ * @package SQLBuild
+ */
 final class Set {
 
 	private $value;
 	private $type1;
 	private $type2;
 
+    /**
+     * Set constructor.
+     * @param String $value
+     * @param int $type1
+     * @param int $type2
+     */
 	public function __construct(String $value, int $type1 = SQLType::AUTO, int $type2 = SQLType::AUTO)
 	{
 		$this->value = $value;
@@ -25,6 +36,7 @@ final class Set {
      * @param String $value
      * @param int $type
      * @return String
+     * @throws Exception
      */
     private function createSQlValue(String $value, int $type): String
     {
@@ -43,7 +55,7 @@ final class Set {
                     return $value;
                 }
                 else {
-                    return sprintf('"%s"', SQLType::validStr($value));
+                    return sprintf('"%s"', SQLType::stringArg($value));
                 }
 
 
@@ -61,7 +73,7 @@ final class Set {
             case SQLType::INT:
                 return (string)(int)$value;
             case SQLType::STRING:
-                return sprintf('"%s"', SQLType::validStr($value));
+                return sprintf('"%s"', SQLType::stringArg($value));
             case SQLType::ARG:
                 return sprintf('`%s`', $value);
             default:
@@ -69,6 +81,10 @@ final class Set {
         }
     }
 
+    /**
+     * @return String
+     * @throws Exception
+     */
 	public function render(): String
     {
         $template = ' %s=%s';

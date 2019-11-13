@@ -1,22 +1,24 @@
 <?php
 
+
 namespace SQLBuild;
 
 
+use Exception;
+
+
+/**
+ * Class WhereCollection - коллекция для задания фильтров запроса UPDATE|SELECT
+ * @package SQLBuild
+ */
 final class WhereCollection extends AbstractCollection
 {
 	public function __construct(array $objs) { $this->objs = $objs; }
 
-
     /**
-     * Для SELECT|INSERT метода
-     *
-     * Работает с масивом arrWhere, который содержит в сеье объекты Where.
-     * Преобразует массив в отформативаную строку.
-     *
-     * @see Where
-     * @see WhereCollection::$objs
+     * Отображение колекции для SQL запроса
      * @return String
+     * @throws Exception
      */
 	public function render (): String
 	{
@@ -30,10 +32,9 @@ final class WhereCollection extends AbstractCollection
             if ($forTest4length == ' AND' || $forTest3length == ' OR' || $forTest4length == 'HERE')
                 $temp .= $obj->render();
             else
-                throw new \Exception('error operator: ' . $forTest4length);
+                throw new Exception('error operator: ' . $forTest4length);
         }
 
-        
         return $temp;
 	}
 }

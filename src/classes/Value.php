@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 
 namespace SQLBuild;
 
@@ -9,6 +7,10 @@ namespace SQLBuild;
 use Exception;
 
 
+/**
+ * Class Value - значение для INSERT
+ * @package SQLBuild
+ */
 final class Value
 {
     private $value;
@@ -50,7 +52,7 @@ final class Value
                 if (preg_match('/[0-9]/', $this->value) || preg_match('/^true$|^false$/', $this->value)) {
                     return $this->value;
                 } else {
-                    return sprintf('"%s"', SQLType::validStr($this->value));
+                    return sprintf('"%s"', SQLType::stringArg($this->value));
                 }
 
             /*
@@ -67,7 +69,7 @@ final class Value
             case SQLType::INT:
                 return (string)(int)$this->value;
             case SQLType::STRING:
-                return sprintf('"%s"', SQLType::validStr($this->value));
+                return sprintf('"%s"', SQLType::stringArg($this->value));
             case SQLType::ARG:
                 return sprintf('`%s`', $this->value);
             default:

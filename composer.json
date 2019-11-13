@@ -6,8 +6,21 @@
   "homepage": "https://github.com/akiosarkiz/sqlbuild",
 
   "require": {
-    "php": ">=5.3",
+    "php": "~7.1",
     "composer-plugin-api": "^1.0"
+  },
+
+  "require-dev": {
+    "phpunit/phpunit": "8.4.3"
+  },
+
+  "autoload-dev":
+  {
+    "classmap": [
+      "src/",
+      "src/classes",
+      "src/collections"
+    ]
   },
 
   "autoload": {

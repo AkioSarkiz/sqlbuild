@@ -1,11 +1,13 @@
 <?php
 
-declare(strict_types = 1);
-
 
 namespace SQLBuild;
 
 
+/**
+ * Class AbstractCollection - основа всех коллекций
+ * @package SQLBuild
+ */
 abstract class AbstractCollection
 {
     /** @var array */

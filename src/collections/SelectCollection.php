@@ -9,6 +9,10 @@ namespace SQLBuild;
 use Exception;
 
 
+/**
+ * Class SelectCollection - коллекция чтоб выбирать колонок для SELECT
+ * @package SQLBuild
+ */
 final class SelectCollection
 {
     const ALL = '--@--@--@--';
@@ -19,8 +23,8 @@ final class SelectCollection
     public function __construct(array $objs){ $this->objs = $objs; }
 
     /**
+     * Отображение колекции для SQL запроса
      * @return String
-     * @throws Exception
      */
 	public function render(): String 
 	{

@@ -5,11 +5,13 @@ declare(strict_types=1);
 
 namespace SQLBuild;
 
-
+/**
+ * Class ColumnCollection - установка колонок для UPDATE
+ * @package SQLBuild
+ */
 final class ColumnCollection extends AbstractCollection
 {
     public function __construct(array $objs){ $this->objs = $objs; }
-
 
     /**
      * Отображение колекции для SQL запроса

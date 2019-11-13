@@ -2,16 +2,28 @@
 
 declare(strict_types=1);
 
+
 namespace SQLBuild;
+
 
 use Exception;
 
+
+/**
+ * Class ValueCollection - коллекция с значениями для UPDATE
+ * @package SQLBuild
+ */
 final class ValueCollection extends AbstractCollection
 {
 	private $temp;
 
 	public function __construct(array $objs){ $this->objs = $objs; }
 
+    /**
+     * Отображение колекции для SQL запроса
+     * @return String
+     * @throws Exception
+     */
 	public function render(): String
 	{
 		foreach ($this->objs as $obj) {

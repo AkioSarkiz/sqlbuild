@@ -10,11 +10,11 @@ use Exception;
 
 
 /**
- * Class [SQLGenerate || SQLG] создан для упращение создания SQL запросов.
+ * Class SQLBuild создан для упращение создания SQL запросов.
  *
  * На первый взгяд может показаться, что это бесполезно.
  * Но если вы хотите быть уверены в своих запросах, чтоб не контролировать каждую скобку,
- * то этот класс вас спасёт.
+ * типы, ограничения, валидность, то этот класс вас спасёт.
  *
  * @author Akio Sarkiz
  * @example examples/GenerateSQLExample.php
@@ -23,7 +23,7 @@ use Exception;
 final class SQLBuild
 {
     /** @var bool авто чистка параметров после получения getSelect, getUpdate etc */
-    public $autoClear = true;
+    private $autoClear = true;
 
     /** @var SelectCollection */
     private $selectCollection;
@@ -46,6 +46,9 @@ final class SQLBuild
 
     /**
      * Освобождение памяти
+     * Очищается автоматически при получении запроса
+     * Можно задать поведение с помощью { @see setAutoClear }
+     *
      * @return SQLBuild
      */
     public function free(): SQLBuild
@@ -61,24 +64,53 @@ final class SQLBuild
         return $this;
     }
 
+    /**
+     * Для INSERT
+     * Колонки для значений
+     *
+     * @param String ...$arr
+     * @return SQLBuild
+     */
     public function addColumn(String ...$arr): SQLBuild
     {
         $this->columnCollection = new ColumnCollection($arr);
         return $this;
     }
 
-    public function addLimit($max): SQLBuild
+    /**
+     * Для SELECT
+     * Лимит на выборку
+     *
+     * @param $max
+     * @param null $start
+     * @return SQLBuild
+     */
+    public function addLimit($max, $start = null): SQLBuild
     {
-        $this->limitCollection = new CollectionLimit($max);
+        $this->limitCollection = new CollectionLimit($max, $start);
         return $this;
     }
 
+    /**
+     * Для SELECT
+     * Убирает повторения в выбраных колонах
+     *
+     * @param $input
+     * @return SQLBuild
+     */
     public function addGroupBy($input): SQLBuild
     {
         $this->groupByCollection = new GroupByCollection($input);
         return $this;
     }
 
+    /**
+     * Для INSERT
+     * Значения для добавления в таблицу
+     *
+     * @param Value ...$obj
+     * @return SQLBuild
+     */
     public function addValue(Value ...$obj): SQLBuild
     {
         $this->valueCollection = new ValueCollection($obj);
@@ -86,9 +118,10 @@ final class SQLBuild
     }
 
     /**
-     * Для SELECT|INSERT метода
+     * Для SELECT|INSERT|UPDATE
+     * Таблиц(ы) в которых нужно проводить манипуляции
      *
-     * @param TableCollection $index
+     * @param String[] $objs
      * @return SQLBuild
      */
     public function addTable(String ...$objs): SQLBuild
@@ -98,9 +131,10 @@ final class SQLBuild
     }
 
     /**
-     * Для SELECT|INSERT метода
+     * Для SELECT
+     * Выбор даннных, если не указан, то выьираются все
      *
-     * @param \SQLBuild\SelectCollection $collection
+     * @param String[] $obj
      * @return SQLBuild
      */
     public function addSelect(String ...$obj): SQLBuild
@@ -110,7 +144,8 @@ final class SQLBuild
     }
 
     /**
-     * Для SELECT|INSERT метода
+     * Для SELECT|UPDATE
+     * Добавляет критерии к отбору
      *
      * @param Where[] $objs
      * @return SQLBuild
@@ -121,6 +156,12 @@ final class SQLBuild
         return $this;
     }
 
+    /**
+     * Добавляет Set'ры для Insert query
+     *
+     * @param Set ...$objs
+     * @return SQLBuild
+     */
     public function addSet(Set ...$objs): SQLBuild
     {
         $this->setCollection = new SetCollection($objs);
@@ -128,20 +169,27 @@ final class SQLBuild
     }
 
     /**
+     * Для SELECT
      * Добавляет сортировку
-     * SQLOperator::ASC - убывание
-     * SQLOperator::DESC - возрастание
+     * SQLOperator::DESC - убывание
+     * SQLOperator::ASC - возрастание
      *
      * @param array $strings
      * @param int $sort
      * @return SQLBuild
      */
-    public function addSort(array $strings, int $sort = SQLOperator::ASC): SQLBuild
+    public function addSort(array $strings, int $sort = SQLOperator::DESC): SQLBuild
     {
         $this->sortCollection = new SortCollection($strings, $sort);
         return $this;
     }
 
+    /**
+     * Получение Select запроса MySQL
+     *
+     * @return String
+     * @throws Exception
+     */
     public function getSelect(): String
     {
         try {
@@ -169,6 +217,12 @@ final class SQLBuild
         }
     }
 
+    /**
+     * Получение Insert запроса MySQL
+     *
+     * @return String
+     * @throws Exception
+     */
     public function getInsert(): String
     {
         try {
@@ -197,6 +251,12 @@ final class SQLBuild
         }
     }
 
+    /**
+     * Получение Update запроса MySQL
+     *
+     * @return String
+     * @throws Exception
+     */
     public function getUpdate(): String
     {
         $renderTable = ($this->tableCollection) ? $this->tableCollection->render() : '';
@@ -221,5 +281,18 @@ final class SQLBuild
             // нужны значения до отдачи
             if ($this->autoClear) $this->free();
         }
+    }
+
+    /**
+     * Очищать ли автоматически память после
+     * каждого getSelect|getInsert etc запроса к классу
+     *
+     * @param bool $autoClear
+     * @return SQLBuild
+     */
+    public function setAutoClear(bool $autoClear): SQLBuild
+    {
+        $this->autoClear = $autoClear;
+        return $this;
     }
 }

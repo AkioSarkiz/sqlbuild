@@ -1,11 +1,21 @@
 <?php
 
+
 namespace SQLBuild;
 
+
+/**
+ * Class SetCollection - коллекция установки новых значений для UPDATE
+ * @package SQLBuild
+ */
 final class SetCollection extends AbstractCollection
 {
 	public function __construct(array $objs){ $this->objs = $objs; }
 
+    /**
+     * Отображение колекции для SQL запроса
+     * @return String
+     */
 	public function render(): String
 	{
 		$temp = 'SET';
