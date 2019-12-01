@@ -89,13 +89,14 @@ final class Set {
     {
         $template = ' %s=%s';
 
-        preg_match_all('([^=]+)', $this->value, $matches);
+        $key = preg_match_all('/^[^=]+/su', $this->value, $matches)[0][0];
+        $value = substr(preg_match_all('/=.*/su', $this->value, $matches)[0][0], 1);
 
         return sprintf(
             $template,
             // скорее всего это аргумент `arg`.. поэтому при SQLG::AUTO делаем SQLG:ARG
             // чтоб не опеределил как string
-            $this->createSQlValue($matches[0][0], ($this->type1 == SQLType::AUTO) ? SQLType::ARG : $this->type1),
-            $this->createSQlValue($matches[0][1], $this->type2));
+            $this->createSQlValue($key, ($this->type1 == SQLType::AUTO) ? SQLType::ARG : $this->type1),
+            $this->createSQlValue($value, $this->type2));
     }
 }

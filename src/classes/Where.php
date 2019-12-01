@@ -93,6 +93,7 @@ final class Where
      * Возвращает отформатирванию строку для запроса
      *
      * @return String
+     * @throws Exception
      */
     public function render(): String
     {

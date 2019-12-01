@@ -295,4 +295,17 @@ final class SQLBuild
         $this->autoClear = $autoClear;
         return $this;
     }
+
+    public function __destruct()
+    {
+        unset($selectCollection);
+        unset($whereCollection);
+        unset($setCollection);
+        unset($columnCollection);
+        unset($valueCollection);
+        unset($tableCollection);
+        unset($sortCollection);
+        unset($limitCollection);
+        unset($groupByCollection);
+    }
 }
