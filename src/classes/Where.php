@@ -105,24 +105,24 @@ final class Where
         elseif ($this->operator == SQLOperator::OR)
             $template .= ' OR';
 
-        preg_match_all('([^<>=!]+)', $this->value, $matches);
+        preg_match_all('/(^[^><=]+)/su', $this->value, $tempMatches);
+        $key = $tempMatches[0][0];
+        preg_match_all('/([><=]).*/su', $this->value, $tempMatches);
+        $value = substr($tempMatches[0][0], 1);
 
-        if (preg_match('(>)', $this->value)) $operator = '>';
-        elseif (preg_match('(<)', $this->value)) $operator = '<';
-        elseif (preg_match('(!=)', $this->value)) $operator = '!=';
-        elseif (preg_match('(=)', $this->value)) $operator = '=';
+        if (preg_match('/^\w*>/su', $this->value)) $operator = '>';
+        elseif (preg_match('/^\w*</su', $this->value)) $operator = '<';
+        elseif (preg_match('/^\w*=/su', $this->value)) $operator = '=';
 
         try {
-            if (count($matches[0]) != 2)
-                throw new Exception('Where need 2 arg', 5);
 
             return sprintf(
                 $template,
                 // скорее всего это аргумент `arg`.. поэтому при SQLG::AUTO делаем SQLG:ARG
                 // чтоб не опеределил как string
-                $this->createSQlValue($matches[0][0], ($this->type1 == SQLType::AUTO) ? SQLType::ARG : $this->type1),
+                $this->createSQlValue($key, ($this->type1 == SQLType::AUTO) ? SQLType::ARG : $this->type1),
                 $operator,
-                $this->createSQlValue($matches[0][1], $this->type2));
+                $this->createSQlValue($value, $this->type2));
         } catch (Exception $e) {
             throw $e;
         }

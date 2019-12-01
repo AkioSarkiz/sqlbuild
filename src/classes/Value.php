@@ -35,7 +35,7 @@ final class Value
      */
     public function render(): String
     {
-        if (strlen($this->value) == 0)
+        if (strlen($this->value) === 0 && !is_bool($this->value))
             throw new Exception('empty value');
 
         // для bool и int конвертация в string
@@ -49,7 +49,7 @@ final class Value
              |-----------------------------------------------------------------------------------------------------------------
              */
             case SQLType::AUTO:
-                if (preg_match('/[0-9]/', $this->value) || preg_match('/^true$|^false$/', $this->value)) {
+                if (preg_match('/^[0-9]+$/', $this->value) || preg_match('/^true$|^false$/', $this->value)) {
                     return $this->value;
                 } else {
                     return sprintf('"%s"', SQLType::stringArg($this->value));

@@ -89,8 +89,10 @@ final class Set {
     {
         $template = ' %s=%s';
 
-        $key = preg_match_all('/^[^=]+/su', $this->value, $matches)[0][0];
-        $value = substr(preg_match_all('/=.*/su', $this->value, $matches)[0][0], 1);
+        preg_match_all('/(^[^=]+)/su', $this->value, $tempMatches);
+        $key = $tempMatches[0][0];
+        preg_match_all('/=.*/su', $this->value, $tempMatches);
+        $value = substr($tempMatches[0][0], 1);
 
         return sprintf(
             $template,
