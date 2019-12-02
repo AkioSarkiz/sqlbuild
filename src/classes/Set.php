@@ -40,8 +40,8 @@ final class Set {
      */
     private function createSQlValue(String $value, int $type): String
     {
-        if (strlen($value) == 0)
-            throw new Exception('empty value');
+        if (is_null($value))
+            return 'NULL';
 
         switch ($type) {
 
@@ -51,7 +51,7 @@ final class Set {
              |-----------------------------------------------------------------------------------------------------------------
              */
             case SQLType::AUTO:
-                if (preg_match('/[0-9]/', $value) || preg_match('[^true$|^false$]', $value)) {
+                if (preg_match('/[0-9]/', $value) || preg_match('[^true$|^false$|]', $value)) {
                     return $value;
                 }
                 else {

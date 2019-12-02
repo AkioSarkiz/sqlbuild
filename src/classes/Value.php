@@ -24,7 +24,7 @@ final class Value
     public function __construct($value, int $type = SQLType::AUTO)
     {
         $this->value = $value;
-        $this->type = $type;
+        $this->type = $type ?? SQLType::NULL;
     }
 
     /**
@@ -35,9 +35,6 @@ final class Value
      */
     public function render(): String
     {
-        if (strlen($this->value) === 0 && !is_bool($this->value))
-            throw new Exception('empty value');
-
         // для bool и int конвертация в string
         $this->value = (is_bool($this->value)) ? ($this->value) ? 'true' : 'false' : (is_int($this->value)) ? (String)$this->value : $this->value;
 
@@ -60,6 +57,9 @@ final class Value
             | Для случаев, когда тип уже указан
             |-----------------------------------------------------------------------------------------------------------------
             */
+            case SQLType::NULL:
+                return 'NULL';
+
             case SQLType::BOOL:
                 if ($this->value == 'true' || $this->value == 'false') {
                     return $this->value;

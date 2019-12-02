@@ -48,8 +48,8 @@ final class Where
      */
     private function createSQlValue(String $value, int $type): String
     {
-        if (strlen($value) == 0)
-            throw new Exception('empty value');
+        if (is_null($value))
+            return 'NULL';
 
         switch ($type) {
 
