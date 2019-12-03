@@ -284,6 +284,37 @@ final class SQLBuild
     }
 
     /**
+     * Возвращает запроса удаления уведомления
+     *
+     * @return String
+     * @throws Exception
+     */
+    public function getDelete(): String
+    {
+        $renderTable = ($this->tableCollection) ? $this->tableCollection->render() : '';
+        $renderWhere = ($this->whereCollection) ? $this->whereCollection->render() : '';
+
+        if ($renderTable == '')
+            throw new Exception('please, add table');
+        elseif ($renderWhere == '')
+            throw new Exception('please, add where');
+
+        try {
+            return sprintf(
+                'DELETE FROM %s WHERE %s;',
+                $renderTable, $renderWhere
+            );
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            // Проверка на чистку таблиц.
+            // Сделано в finaly потому что нам
+            // нужны значения до отдачи
+            if ($this->autoClear) $this->free();
+        }
+    }
+
+    /**
      * Очищать ли автоматически память после
      * каждого getSelect|getInsert etc запроса к классу
      *

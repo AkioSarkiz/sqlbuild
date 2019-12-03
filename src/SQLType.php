@@ -26,8 +26,8 @@ final class SQLType
      * @param String $str
      * @return String
      */
-    public static function stringArg(String $str): String
+    public static function stringArg($str): String
     {
-        return str_replace('"', '\\"', str_replace('\\', '\\\\', $str));
+        return str_replace('"', '\\"', str_replace('\\', '\\\\', (string)$str));
     }
 }
