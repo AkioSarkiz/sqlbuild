@@ -301,7 +301,7 @@ final class SQLBuild
 
         try {
             return sprintf(
-                'DELETE FROM %s WHERE %s;',
+                'DELETE FROM %s %s;',
                 $renderTable, $renderWhere
             );
         } catch (Exception $e) {
