@@ -48,7 +48,7 @@ final class Where
      */
     private function createSQlValue(String $value, int $type): String
     {
-        if (is_null($value))
+        if ($type === SQLType::NULL || is_null($value))
             return 'NULL';
 
         switch ($type) {
@@ -121,13 +121,17 @@ final class Where
 
             return sprintf(
                 $template,
-                // скорее всего это аргумент `arg`.. поэтому при SQLG::AUTO делаем SQLG:ARG
-                // чтоб не опеределил как string
+                // Скорее всего это аргумент `arg`, поэтому при SQLType::AUTO делаем SQLType:ARG
+                // Чтоб не определил как string
                 $this->createSQlValue($key, ($this->type1 == SQLType::AUTO) ? SQLType::ARG : $this->type1),
                 $operator,
                 $this->createSQlValue($value, $this->type2));
         } catch (Exception $e) {
             throw $e;
+        } finally {
+            unset($operator);
+            unset($tempMatches);
+            unset($template);
         }
     }
 }

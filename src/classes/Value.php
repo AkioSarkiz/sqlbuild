@@ -35,6 +35,9 @@ final class Value
      */
     public function render(): String
     {
+        if ($this->type === SQLType::NULL || is_null($this->value))
+            return 'NULL';
+
         // для bool и int конвертация в string
         $this->value = (is_bool($this->value)) ? ($this->value) ? 'true' : 'false' : (is_int($this->value)) ? (String)$this->value : $this->value;
 
@@ -75,5 +78,11 @@ final class Value
             default:
                 throw new Exception();
         }
+    }
+
+    public function __destruct()
+    {
+        unset($this->value);
+        unset($this->type);
     }
 }

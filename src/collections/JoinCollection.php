@@ -4,7 +4,7 @@
 namespace SQLBuild;
 
 
-class JoinCollection extends AbstractCollection
+final class JoinCollection extends AbstractCollection
 {
     public function __construct(int $operator, String $nameTable)
     {

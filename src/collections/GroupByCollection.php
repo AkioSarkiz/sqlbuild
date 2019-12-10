@@ -6,7 +6,7 @@ declare(strict_types = 1);
 namespace SQLBuild;
 
 
-class GroupByCollection extends AbstractCollection
+final class GroupByCollection extends AbstractCollection
 {
 
     public function __construct($input)

@@ -40,7 +40,7 @@ final class Set {
      */
     private function createSQlValue(String $value, int $type): String
     {
-        if (is_null($value))
+        if ($type === SQLType::NULL || is_null($value))
             return 'NULL';
 
         switch ($type) {
@@ -96,12 +96,23 @@ final class Set {
         $key = $tempMatches[0][0];
         preg_match_all('/=.*/su', $this->value, $tempMatches);
         $value = substr($tempMatches[0][0], 1);
-
-        return sprintf(
+        $result = sprintf(
             $template,
-            // скорее всего это аргумент `arg`.. поэтому при SQLG::AUTO делаем SQLG:ARG
-            // чтоб не опеределил как string
+            // Скорее всего это аргумент `arg`, поэтому при SQLType::AUTO делаем SQLType:ARG
+            // Чтоб не определил как string
             $this->createSQlValue($key, ($this->type1 == SQLType::AUTO) ? SQLType::ARG : $this->type1),
             $this->createSQlValue($value, $this->type2));
+
+        unset($key);
+        unset($value);
+        unset($tempMatches);
+        return $result;
+    }
+
+    public function __destruct()
+    {
+        unset($this->value);
+        unset($this->type1);
+        unset($this->type2);
     }
 }
