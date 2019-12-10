@@ -18,6 +18,7 @@ final class SQLType
     public const BOOL   = 3;
     public const ARG    = 4;
     public const NULL   = 5;
+    public const NOEDIT = 6;
 
     /**
      * Метод форматирует строку как String аргумент

@@ -51,7 +51,7 @@ final class Set {
              |-----------------------------------------------------------------------------------------------------------------
              */
             case SQLType::AUTO:
-                if (preg_match('/[0-9]/', $value) || preg_match('[^true$|^false$|]', $value)) {
+                if (preg_match('/^[0-9]*$/', $value) || preg_match('[^true$|^false$]', $value)) {
                     return $value;
                 }
                 else {
@@ -64,6 +64,9 @@ final class Set {
             | Для случаев, когда тип уже указан
             |-----------------------------------------------------------------------------------------------------------------
             */
+            case SQLType::NOEDIT:
+                return $value;
+
             case SQLType::BOOL:
                 if ($value == 'true' || $value == 'false') {
                     return $value;

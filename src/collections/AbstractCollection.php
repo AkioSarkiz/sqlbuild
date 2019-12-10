@@ -14,7 +14,7 @@ abstract class AbstractCollection
     protected $objs;
 
     /**
-     * Отображение колекции для SQL запроса
+     * Отображение коллекции для SQL запроса
      * @return String
      */
     abstract public function render(): String;

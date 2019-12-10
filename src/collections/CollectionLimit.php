@@ -22,7 +22,7 @@ final class CollectionLimit extends AbstractCollection
     }
 
     /**
-     * Отображение колекции для SQL запроса
+     * Отображение коллекции для SQL запроса
      * @return String
      */
     public function render(): String

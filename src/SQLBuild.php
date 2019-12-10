@@ -43,6 +43,8 @@ final class SQLBuild
     private $limitCollection;
     /** @var GroupByCollection */
     private $groupByCollection;
+    /** @var JoinCollection */
+    public $joinCollection;
 
     /**
      * Освобождение памяти
@@ -61,6 +63,7 @@ final class SQLBuild
         unset($this->columnCollection);
         unset($this->valueCollection );
         unset($this->tableCollection );
+        unset($this->joinCollection  );
         return $this;
     }
 
@@ -88,6 +91,12 @@ final class SQLBuild
     public function addLimit($max, $start = null): SQLBuild
     {
         $this->limitCollection = new CollectionLimit($max, $start);
+        return $this;
+    }
+
+    public function addJoin(int $typeConst, String $nameTable): SQLBuild
+    {
+        $this->joinCollection = new JoinCollection($typeConst, $nameTable);
         return $this;
     }
 
@@ -137,7 +146,7 @@ final class SQLBuild
      * @param String[] $obj
      * @return SQLBuild
      */
-    public function addSelect(String ...$obj): SQLBuild
+    public function addSelect(array $obj): SQLBuild
     {
         $this->selectCollection = new SelectCollection($obj);
         return $this;
@@ -199,19 +208,26 @@ final class SQLBuild
             $renderSort = ($this->sortCollection) ? $this->sortCollection->render() : '';
             $renderLimit = ($this->limitCollection) ? $this->limitCollection->render() : '';
             $renderGroupBy = ($this->groupByCollection) ? $this->groupByCollection->render() : '';
+            $renderJoin = ($this->joinCollection) ? $this->joinCollection->render() : '';
 
             if ($renderTable == '')
                 throw new Exception('please, add table');
 
             return sprintf(
-                'SELECT %s FROM %s %s %s %s %s',
-                $renderSelect, $renderTable, $renderWhere, $renderGroupBy, $renderSort, $renderLimit
+                'SELECT %s FROM %s%s%s%s%s%s;',
+                $renderSelect,
+                (($renderTable !== '') ? ' ' . $renderTable : ''),
+                (($renderJoin !== '') ? ' ' . $renderJoin : ''),
+                (($renderWhere !== '') ? ' ' . $renderWhere : ''),
+                (($renderGroupBy !== '') ? ' ' . $renderGroupBy : ''),
+                (($renderSort !== '') ? ' ' . $renderSort : ''),
+                (($renderLimit !== '') ? ' ' . $renderLimit : '')
             );
         } catch (Exception $e) {
             throw $e;
         } finally {
             // Проверка на чистку таблиц.
-            // Сделано в finaly потому что нам
+            // Сделано в finally потому что нам
             // нужны значения до отдачи
             if ($this->autoClear) $this->free();
         }
@@ -245,7 +261,7 @@ final class SQLBuild
             throw $e;
         }finally {
             // Проверка на чистку таблиц.
-            // Сделано в finaly потому что нам
+            // Сделано в finally потому что нам
             // нужны значения до отдачи
             if ($this->autoClear) $this->free();
         }
@@ -277,7 +293,7 @@ final class SQLBuild
             exit('error!');
         } finally {
             // Проверка на чистку таблиц.
-            // Сделано в finaly потому что нам
+            // Сделано в finally потому что нам
             // нужны значения до отдачи
             if ($this->autoClear) $this->free();
         }
@@ -308,7 +324,7 @@ final class SQLBuild
             throw $e;
         } finally {
             // Проверка на чистку таблиц.
-            // Сделано в finaly потому что нам
+            // Сделано в finally потому что нам
             // нужны значения до отдачи
             if ($this->autoClear) $this->free();
         }
@@ -338,5 +354,6 @@ final class SQLBuild
         unset($sortCollection);
         unset($limitCollection);
         unset($groupByCollection);
+        unset($this->joinCollection);
     }
 }

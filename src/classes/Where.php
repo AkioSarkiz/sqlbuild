@@ -72,6 +72,9 @@ final class Where
             | Для случаев, когда тип уже указан
             |-----------------------------------------------------------------------------------------------------------------
             */
+            case SQLType::NOEDIT:
+                return $value;
+
             case SQLType::BOOL:
                 if ($value == 'true' || $value == 'false') {
                     return $value;

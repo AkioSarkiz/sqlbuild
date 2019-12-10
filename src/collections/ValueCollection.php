@@ -20,7 +20,7 @@ final class ValueCollection extends AbstractCollection
 	public function __construct(array $objs){ $this->objs = $objs; }
 
     /**
-     * Отображение колекции для SQL запроса
+     * Отображение коллекции для SQL запроса
      * @return String
      * @throws Exception
      */

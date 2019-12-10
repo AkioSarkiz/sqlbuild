@@ -13,7 +13,7 @@ final class SetCollection extends AbstractCollection
 	public function __construct(array $objs){ $this->objs = $objs; }
 
     /**
-     * Отображение колекции для SQL запроса
+     * Отображение коллекции для SQL запроса
      * @return String
      */
 	public function render(): String

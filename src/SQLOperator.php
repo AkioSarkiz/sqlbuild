@@ -17,4 +17,8 @@ final class SQLOperator
     public const OR     = 2;
     public const ASC    = 3;
     public const DESC   = 4;
+    public const INNER  = 5;
+    public const LEFT   = 6;
+    public const RIGHT  = 7;
+    public const FULL   = 8;
 }

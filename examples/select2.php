@@ -14,7 +14,7 @@ $sqlBuild = new SQLBuild();
 
 try {
     $query = $sqlBuild
-        ->addSelect() # OR ->addSelect(SelectCollection::ALL) OR empty      => ALL
+        ->addSelect([]) # OR ->addSelect(SelectCollection::ALL) OR empty      => ALL
         ->addTable('users')
         ->addWhere(
             new Where('last_visit=new str"', SQLOperator:: OR, SQLType::ARG, SQLType::STRING),

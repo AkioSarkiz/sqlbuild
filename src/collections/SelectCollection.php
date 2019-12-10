@@ -15,20 +15,18 @@ use Exception;
  */
 final class SelectCollection
 {
-    const ALL = '--@--@--@--';
-
     /** @var array */
     private $objs;
 
     public function __construct(array $objs){ $this->objs = $objs; }
 
     /**
-     * Отображение колекции для SQL запроса
+     * Отображение коллекции для SQL запроса
      * @return String
      */
 	public function render(): String 
 	{
-		if ($this->objs[0] == self::ALL || count($this->objs) == 0) {
+		if (count($this->objs) === 0) {
 		    return '*';
 		}
 		return '`' . implode($this->objs, '`,`') . '`';
