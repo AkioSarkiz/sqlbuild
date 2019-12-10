@@ -18,8 +18,8 @@
   {
     "classmap": [
       "src/",
-      "src/classes",
-      "src/collections"
+      "src/classes/",
+      "src/collections/"
     ]
   },
 
