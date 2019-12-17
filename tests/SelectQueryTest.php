@@ -16,7 +16,8 @@ class SelectQueryTest extends TestCase
                 ->addSort(['id', 'password'], SQLOperator::DESC)
                 ->addWhere(
                     new Where('command=pa==!>ssw\"ord', SQLOperator:: AND),
-                    new Where('password=tempString')
+                    (new Where('password=tempString', SQLOperator::AND))->addLike(),
+                    new Where('command=pa==!>ssw\"ord', SQLOperator:: NONE)
                 )
                 ->getSelect();
             var_dump($query);

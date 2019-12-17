@@ -94,9 +94,10 @@ final class Where
         }
     }
 
-    public function addLike(): Void
+    public function addLike(): Where
     {
         $this->like = true;
+        return $this;
     }
 
     /**
@@ -107,13 +108,14 @@ final class Where
      */
     public function render(): String
     {
+        $sqlOperator = '';
         $operator = null;
         $template = ' %s%s%s';
 
         if ($this->operator == SQLOperator::AND)
-            $template .= ' AND';
+            $sqlOperator .= ' AND';
         elseif ($this->operator == SQLOperator::OR)
-            $template .= ' OR';
+            $sqlOperator .= ' OR';
 
         preg_match_all('/(^[^><=]+)/su', $this->value, $tempMatches);
         $key = $tempMatches[0][0];
@@ -121,7 +123,7 @@ final class Where
         $value = substr($tempMatches[0][0], 1);
 
         if ($this->like)
-            return "`$key` LIKE $value";
+            return " `$key` LIKE $value" . $sqlOperator;
 
         if (preg_match('/^\w*>/su', $this->value)) $operator = '>';
         elseif (preg_match('/^\w*</su', $this->value)) $operator = '<';
@@ -135,7 +137,7 @@ final class Where
                 // Чтоб не определил как string
                 $this->createSQlValue($key, ($this->type1 == SQLType::AUTO) ? SQLType::ARG : $this->type1),
                 $operator,
-                $this->createSQlValue($value, $this->type2));
+                $this->createSQlValue($value, $this->type2)) . $sqlOperator;
         } catch (Exception $e) {
             throw $e;
         } finally {
