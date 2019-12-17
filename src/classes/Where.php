@@ -22,6 +22,8 @@ final class Where
     public $type1;
     /** @var int  */
     public $type2;
+    /** @var bool  */
+    private $like = false;
 
     /**
      * Where constructor.
@@ -92,6 +94,11 @@ final class Where
         }
     }
 
+    public function addLike(): Void
+    {
+        $this->like = true;
+    }
+
     /**
      * Возвращает отформатирванию строку для запроса
      *
@@ -112,6 +119,9 @@ final class Where
         $key = $tempMatches[0][0];
         preg_match_all('/([><=]).*/su', $this->value, $tempMatches);
         $value = substr($tempMatches[0][0], 1);
+
+        if ($this->like)
+            return "`$key` LIKE $value";
 
         if (preg_match('/^\w*>/su', $this->value)) $operator = '>';
         elseif (preg_match('/^\w*</su', $this->value)) $operator = '<';
