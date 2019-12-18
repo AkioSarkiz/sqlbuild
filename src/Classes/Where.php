@@ -5,6 +5,9 @@ namespace SQLBuild;
 
 
 use Exception;
+use SQLBuild\Traits\UpdateOperator;
+use SQLBuild\Traits\UpdateType;
+use SQLBuild\Traits\UpdateValue;
 
 
 /**
@@ -14,6 +17,10 @@ use Exception;
  */
 final class Where
 {
+    use UpdateOperator;
+    use UpdateType;
+    use UpdateValue;
+
     /** @var String  */
     public $value;
     /** @var int  */
@@ -31,13 +38,58 @@ final class Where
      * @param int $operator - оператор после фильтра
      * @param int $type1 - тип пременной первого аргумента, если указано AUTO, то перый аргумент будет типа ARG str => `str`
      * @param int $type2 - тип пременной второго аргумента
+     * @throws Exception
      */
     public function __construct(String $value, int $operator = SQLOperator::NONE, int $type1 = SQLType::AUTO, int $type2 = SQLType::AUTO)
     {
-        $this->value = $value;
-        $this->operator = $operator;
-        $this->type1 = $type1;
-        $this->type2 = $type2;
+        $this->updateValue($value);
+        $this->updateOperator($operator);
+        $this->updateType1($type1);
+        $this->updateType2($type2);
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     * @throws Exception
+     */
+    public function updateValue($value): self
+    {
+        self::updateValueTrait($this->value, $value);
+        return $this;
+    }
+
+    /**
+     * @param int $type1
+     * @return $this
+     * @throws Exception
+     */
+    public function updateType1(int $type1): self
+    {
+        self::updateTypeTrait($this->type1, $type1);
+        return $this;
+    }
+
+    /**
+     * @param int $type2
+     * @return $this
+     * @throws Exception
+     */
+    public function updateType2(int $type2): self
+    {
+        self::updateTypeTrait($this->type2, $type2);
+        return $this;
+    }
+
+    /**
+     * @param int $operator
+     * @return $this
+     * @throws Exception
+     */
+    public function updateOperator(int $operator = SQLOperator::NONE): self
+    {
+        self::updateOperatorTrait($this->operator, $operator);
+        return $this;
     }
 
     /**
@@ -123,7 +175,7 @@ final class Where
         $value = substr($tempMatches[0][0], 1);
 
         if ($this->like)
-            return " `$key` LIKE $value" . $sqlOperator;
+            return " `$key` LIKE \"$value\"" . $sqlOperator;
 
         if (preg_match('/^\w*>/su', $this->value)) $operator = '>';
         elseif (preg_match('/^\w*</su', $this->value)) $operator = '<';

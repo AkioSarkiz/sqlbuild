@@ -1,10 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
-require __DIR__ . '/../vendor/autoload.php';
+
+namespace Tests;
+
 
 use PHPUnit\Framework\TestCase;
 use SQLBuild\SQLBuild;
 use SQLBuild\Value;
+
 
 class InsertQueryTest extends TestCase
 {
@@ -13,7 +16,7 @@ class InsertQueryTest extends TestCase
         try {
             $query = (new SQLBuild)
                 ->addTable('page')
-                ->addColumn('title', 'tags', 'content')
+                ->addColumn('title')
                 ->addValue(
                     new Value('PageTitle'),
                     new Value('tag;tag;tag'),
@@ -34,7 +37,7 @@ class InsertQueryTest extends TestCase
         try {
             $query = (new SQLBuild)
                 ->addTable('page')
-                ->addColumn('id', 'tags', 'content')
+                ->addColumn(['id', 'tags', 'content'])
                 ->addValue(
                     new Value(123456),
                     new Value('tag;tag;tag'),

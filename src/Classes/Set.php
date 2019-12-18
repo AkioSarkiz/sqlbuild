@@ -5,30 +5,71 @@ namespace SQLBuild;
 
 
 use Exception;
+use SQLBuild\Traits\UpdateType;
+use SQLBuild\Traits\UpdateValue;
 
 
 /**
  * Class Set - установка значения для UPDATE
  * @package SQLBuild
  */
-final class Set {
+final class Set
+{
+    use UpdateType;
+    use UpdateValue;
 
-	private $value;
-	private $type1;
-	private $type2;
+    private $value;
+    private $type1;
+    private $type2;
 
     /**
      * Set constructor.
      * @param String $value
      * @param int $type1
      * @param int $type2
+     * @throws Exception
      */
-	public function __construct(String $value, int $type1 = SQLType::AUTO, int $type2 = SQLType::AUTO)
-	{
-		$this->value = $value;
-		$this->type1 = $type1;
-		$this->type2 = $type2;
-	}
+    public function __construct(String $value, int $type1 = SQLType::AUTO, int $type2 = SQLType::AUTO)
+    {
+        $this->updateValue($value);
+        $this->updateType1($type1);
+        $this->updateType2($type2);
+    }
+
+
+    /**
+     * @param $value
+     * @return $this
+     * @throws Exception
+     */
+    public function updateValue($value): self
+    {
+        self::updateValueTrait($this->value, $value);
+        return $this;
+    }
+
+    /**
+     * @param int $type1
+     * @return $this
+     * @throws Exception
+     */
+    public function updateType1(int $type1): self
+    {
+        self::updateTypeTrait($this->type1, $type1);
+        return $this;
+    }
+
+    /**
+     * @param int $type2
+     * @return $this
+     * @throws Exception
+     */
+    public function updateType2(int $type2): self
+    {
+        self::updateTypeTrait($this->type2, $type2);
+        return $this;
+    }
+
 
     /**
      * Отображение переменной для SQL запроса
@@ -53,8 +94,7 @@ final class Set {
             case SQLType::AUTO:
                 if (preg_match('/^[0-9]*$/', $value) || preg_match('[^true$|^false$]', $value)) {
                     return $value;
-                }
-                else {
+                } else {
                     return sprintf('"%s"', SQLType::stringArg($value));
                 }
 
@@ -70,7 +110,7 @@ final class Set {
             case SQLType::BOOL:
                 if ($value == 'true' || $value == 'false') {
                     return $value;
-                }else {
+                } else {
                     throw new Exception('value: ' . $value . ' isn\'t bool type');
                 }
             case SQLType::INT:
@@ -80,7 +120,7 @@ final class Set {
             case SQLType::ARG:
                 return sprintf('`%s`', $value);
             default:
-                throw new Exception();
+                throw new \Exception('тип аргумента неверный, тип: ' . gettype($value));
         }
     }
 
@@ -88,7 +128,7 @@ final class Set {
      * @return String
      * @throws Exception
      */
-	public function render(): String
+    public function render(): String
     {
         $template = ' %s=%s';
 

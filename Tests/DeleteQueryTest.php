@@ -1,10 +1,14 @@
-<?php
+<?php declare(strict_types=1);
+
+
+namespace Tests;
 
 
 use PHPUnit\Framework\TestCase;
 use SQLBuild\SQLBuild;
 use SQLBuild\Value;
 use SQLBuild\Where;
+
 
 class DeleteQueryTest extends TestCase
 {

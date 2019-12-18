@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 
 namespace SQLBuild;
@@ -24,7 +22,6 @@ final class SQLBuild
 {
     /** @var bool авто чистка параметров после получения getSelect, getUpdate etc */
     private $autoClear = true;
-
     /** @var SelectCollection */
     private $selectCollection;
     /** @var WhereCollection */
@@ -55,28 +52,31 @@ final class SQLBuild
      */
     public function free(): SQLBuild
     {
-        unset($this->selectCollection);
-        unset($this->whereCollection );
-        unset($this->arrFrom         );
-        unset($this->updateCollection);
-        unset($this->setCollection   );
-        unset($this->columnCollection);
-        unset($this->valueCollection );
-        unset($this->tableCollection );
-        unset($this->joinCollection  );
+        $this->selectCollection = null;
+        $this->whereCollection  = null;
+        $this->arrFrom          = null;
+        $this->updateCollection = null;
+        $this->setCollection    = null;
+        $this->columnCollection = null;
+        $this->valueCollection  = null;
+        $this->tableCollection  = null;
+        $this->joinCollection   = null;
         return $this;
     }
+
 
     /**
      * Для INSERT
      * Колонки для значений
      *
-     * @param String ...$arr
+     * @param String|array $args
      * @return SQLBuild
      */
-    public function addColumn(String ...$arr): SQLBuild
+    public function addColumn($args): SQLBuild
     {
-        $this->columnCollection = new ColumnCollection($arr);
+        if ($this->columnCollection === null)
+            $this->columnCollection = new ColumnCollection();
+        $this->columnCollection->add($args);
         return $this;
     }
 
@@ -88,12 +88,20 @@ final class SQLBuild
      * @param null $start
      * @return SQLBuild
      */
-    public function addLimit($max, $start = null): SQLBuild
+    public function addLimit(int $max, $start = null): SQLBuild
     {
         $this->limitCollection = new CollectionLimit($max, $start);
         return $this;
     }
 
+    /**
+     * Для SELECT
+     * Объединение таблиц
+     *
+     * @param int $typeConst
+     * @param String $nameTable
+     * @return SQLBuild
+     */
     public function addJoin(int $typeConst, String $nameTable): SQLBuild
     {
         $this->joinCollection = new JoinCollection($typeConst, $nameTable);
@@ -102,9 +110,9 @@ final class SQLBuild
 
     /**
      * Для SELECT
-     * Убирает повторения в выбраных колонах
+     * Убирает повторения в выбранных колонах
      *
-     * @param $input
+     * @param String|array $input
      * @return SQLBuild
      */
     public function addGroupBy($input): SQLBuild
@@ -130,12 +138,14 @@ final class SQLBuild
      * Для SELECT|INSERT|UPDATE
      * Таблиц(ы) в которых нужно проводить манипуляции
      *
-     * @param String[] $objs
+     * @param String|array $args
      * @return SQLBuild
      */
-    public function addTable(String ...$objs): SQLBuild
+    public function addTable($args): SQLBuild
     {
-        $this->tableCollection = new TableCollection($objs);
+        if (is_null($this->tableCollection))
+            $this->tableCollection = new TableCollection();
+        $this->tableCollection->add($args);
         return $this;
     }
 
@@ -143,12 +153,19 @@ final class SQLBuild
      * Для SELECT
      * Выбор даннных, если не указан, то выьираются все
      *
-     * @param String[] $obj
+     * @param String|array $args
      * @return SQLBuild
+     * @throws Exception
      */
-    public function addSelect(array $obj): SQLBuild
+    public function addSelect($args): SQLBuild
     {
-        $this->selectCollection = new SelectCollection($obj);
+        if (is_null($this->selectCollection))
+            $this->selectCollection = new SelectCollection();
+        try {
+            $this->selectCollection->add($args);
+        } catch (Exception $e) {
+            throw $e;
+        }
         return $this;
     }
 
@@ -183,11 +200,11 @@ final class SQLBuild
      * SQLOperator::DESC - убывание
      * SQLOperator::ASC - возрастание
      *
-     * @param array $strings
+     * @param array|String $strings
      * @param int $sort
      * @return SQLBuild
      */
-    public function addSort(array $strings, int $sort = SQLOperator::DESC): SQLBuild
+    public function addSort($strings, int $sort = SQLOperator::DESC): SQLBuild
     {
         $this->sortCollection = new SortCollection($strings, $sort);
         return $this;

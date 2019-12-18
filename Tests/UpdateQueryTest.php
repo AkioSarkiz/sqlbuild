@@ -1,4 +1,8 @@
-<?php
+<?php declare(strict_types=1);
+
+
+namespace Tests;
+
 
 use PHPUnit\Framework\TestCase;
 use SQLBuild\Set;
@@ -6,16 +10,17 @@ use SQLBuild\SQLBuild;
 use SQLBuild\SQLOperator;
 use SQLBuild\Where;
 
+
 class UpdateQueryTest extends TestCase
 {
     public function testUpdates()
     {
         try {
             $query = (new SQLBuild())
-                ->addTable('users', 'admins')
+                ->addTable(['users', 'admins'])
                 ->addSet(new Set("password=newPassword=lol"))
                 ->addWhere(new Where('id=25', SQLOperator::AND), new Where('password=simpleP=assword'))
-                ->addSort(['id'], SQLOperator::DESC)
+                ->addSort('id', SQLOperator::DESC)
                 ->getUpdate();
             var_dump($query);
             $this->assertTrue(true);

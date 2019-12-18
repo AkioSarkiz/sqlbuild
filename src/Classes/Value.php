@@ -5,6 +5,8 @@ namespace SQLBuild;
 
 
 use Exception;
+use SQLBuild\Traits\UpdateType;
+use SQLBuild\Traits\UpdateValue;
 
 
 /**
@@ -13,6 +15,9 @@ use Exception;
  */
 final class Value
 {
+    use UpdateType;
+    use UpdateValue;
+
     private $value;
     private $type;
 
@@ -20,11 +25,34 @@ final class Value
      * Value constructor.
      * @param mixed $value
      * @param int $type
+     * @throws Exception
      */
     public function __construct($value, int $type = SQLType::AUTO)
     {
-        $this->value = $value;
-        $this->type = $type ?? SQLType::NULL;
+        $this->updateValue($value);
+        $this->updateType($type);
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     * @throws Exception
+     */
+    public function updateValue($value): self
+    {
+        self::updateValueTrait($this->value, $value);
+        return $this;
+    }
+
+    /**
+     * @param int $type
+     * @return $this
+     * @throws Exception
+     */
+    public function updateType(int $type): self
+    {
+        self::updateTypeTrait($this->type, $type);
+        return $this;
     }
 
     /**

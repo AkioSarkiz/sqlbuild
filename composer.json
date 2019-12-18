@@ -26,8 +26,9 @@
   "autoload": {
     "classmap": [
       "src/",
-      "src/classes",
-      "src/collections"
+      "src/Classes/",
+      "src/Traits/",
+      "src/Collections/"
     ]
   },
 

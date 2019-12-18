@@ -1,10 +1,13 @@
-<?php
+<?php declare(strict_types=1);
+
 
 use SQLBuild\SQLBuild;
 use SQLBuild\SQLOperator;
 use SQLBuild\Where;
 
+
 require __DIR__ . '/../vendor/autoload.php';
+
 
 # -----------------------------------------------------------------------------------------------------------------
 
@@ -13,7 +16,7 @@ $sqlBuild = new SQLBuild();
 try {
     $query = $sqlBuild
         ->addSelect(['password', 'email', 'login'])
-        ->addTable('users', 'admin', 'guest')
+        ->addTable(['users', 'admin', 'guest'])
         ->addWhere(
             new Where('last_visit=21.01.2019', SQLOperator:: OR),
             new Where('data_register=21.01.2019'))

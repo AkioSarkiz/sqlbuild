@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 
 use SQLBuild\SelectCollection;
 use SQLBuild\SQLBuild;
@@ -6,7 +7,9 @@ use SQLBuild\SQLOperator;
 use SQLBuild\SQLType;
 use SQLBuild\Where;
 
+
 require __DIR__ . '/../vendor/autoload.php';
+
 
 # -----------------------------------------------------------------------------------------------------------------
 

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 
 namespace SQLBuild;
@@ -30,5 +28,10 @@ final class SQLType
     public static function stringArg($str): String
     {
         return str_replace('"', '\\"', str_replace('\\', '\\\\', (string)$str));
+    }
+
+    public static function isValid(int $value): bool
+    {
+        return $value >= -1 && $value <= 6;
     }
 }

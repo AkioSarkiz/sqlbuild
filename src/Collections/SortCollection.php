@@ -18,9 +18,9 @@ final class SortCollection extends AbstractCollection
      * @param array $strings
      * @param int $sort
      */
-    public function __construct(array $strings, int $sort = SQLOperator::DESC)
+    public function __construct($strings, int $sort = SQLOperator::DESC)
     {
-        $this->objs = $strings;
+        $this->objs = (is_array($strings)) ? $strings : [$strings];
         $this->type = (SQLOperator::ASC == $sort) ? 'ASC' : 'DESC';
     }
 

@@ -11,7 +11,7 @@ namespace SQLBuild;
 abstract class AbstractCollection
 {
     /** @var array */
-    protected $objs;
+    protected $objs = [];
 
     /**
      * Отображение коллекции для SQL запроса

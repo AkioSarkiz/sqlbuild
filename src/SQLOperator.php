@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 
 namespace SQLBuild;
@@ -21,4 +19,9 @@ final class SQLOperator
     public const LEFT   = 6;
     public const RIGHT  = 7;
     public const FULL   = 8;
+
+    public static function isValid(int $link_oprt)
+    {
+        return $link_oprt >= 0 && $link_oprt <= 8;
+    }
 }

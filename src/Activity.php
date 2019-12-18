@@ -1,13 +1,13 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 
 namespace SQLBuild;
 
+
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
+
 
 /**
  * Class Activity - класс для composer
