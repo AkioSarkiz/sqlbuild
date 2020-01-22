@@ -30,6 +30,8 @@ final class SortCollection extends AbstractCollection
      */
     public function render(): String
     {
+        if (count($this->objs) === 0)
+            return '';
         return (count($this->objs) == 0) ?  '' :
             'ORDER BY `' . implode($this->objs, '`,`') . '` ' . $this->type;
     }

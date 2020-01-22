@@ -71,6 +71,7 @@ final class SQLBuild
      *
      * @param String|array $args
      * @return SQLBuild
+     * @throws Exception
      */
     public function addColumn($args): SQLBuild
     {
@@ -228,7 +229,10 @@ final class SQLBuild
             $renderJoin = ($this->joinCollection) ? $this->joinCollection->render() : '';
 
             if ($renderTable == '')
-                throw new Exception('please, add table');
+                throw new SQLException(SQLException::createLangArr(
+                    'Use method "addTable()"',
+                    'Используйте метод "addTable()"'
+                ));
 
             return sprintf(
                 'SELECT %s FROM %s%s%s%s%s%s;',
@@ -264,11 +268,20 @@ final class SQLBuild
             $renderValue = ($this->valueCollection) ? $this->valueCollection->render() : '';
 
             if ($renderTable == '')
-                throw new Exception('please, add table');
+                throw new SQLException(SQLException::createLangArr(
+                    'Use method "addTable()"',
+                    'Используйте метод "addTable()"'
+                ));
             elseif ($this->tableCollection->count() > 1)
-                throw new Exception('max tables = 1, your collection have ' . $this->tableCollection->count() . ' tables');
+                throw new SQLException(SQLException::createLangArr(
+                    'Max tables == 1 for INSERT method, your collection have: ' . $this->tableCollection->count() . ' tables',
+                    'max tables = 1, your collection have ' . $this->tableCollection->count() . ' tables'
+                ));
             elseif ($renderValue == '')
-                throw new Exception('please, add values');
+                throw new SQLException(SQLException::createLangArr(
+                    'Add values to object for SQL request',
+                    'Добавьте значения к объекту для SQL запроса'
+                ));
 
             return sprintf(
                 'INSERT INTO %s%s VALUES (%s);',
@@ -297,9 +310,15 @@ final class SQLBuild
         $renderWhere = ($this->whereCollection) ? $this->whereCollection->render() : '';
 
         if ($renderTable == '')
-            throw new Exception('please, add table');
+            throw new SQLException(SQLException::createLangArr(
+                'Use method "addTable()"',
+                'Используйте метод "addTable()"'
+            ));
         elseif ($renderSet == '')
-            throw new Exception('please, add set');
+            throw new SQLException(SQLException::createLangArr(
+                'Use method "addSet()"',
+                'Используйте метод "addSet()"'
+            ));
 
         try {
             return sprintf(
@@ -328,9 +347,15 @@ final class SQLBuild
         $renderWhere = ($this->whereCollection) ? $this->whereCollection->render() : '';
 
         if ($renderTable == '')
-            throw new Exception('please, add table');
+            throw new SQLException(SQLException::createLangArr(
+                'Use method "addTable()"',
+                'Используйте метод "addTable()"'
+            ));
         elseif ($renderWhere == '')
-            throw new Exception('please, add where');
+            throw new SQLException(SQLException::createLangArr(
+                'Use method "addWhere()"',
+                'Используйте метод "addWhere()"'
+            ));
 
         try {
             return sprintf(

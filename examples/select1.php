@@ -15,7 +15,7 @@ $sqlBuild = new SQLBuild();
 
 try {
     $query = $sqlBuild
-        ->addSelect(['password', 'email', 'login'])
+        ->addSelect([])
         ->addTable(['users', 'admin', 'guest'])
         ->addWhere(
             new Where('last_visit=21.01.2019', SQLOperator:: OR),

@@ -26,6 +26,9 @@ final class ValueCollection extends AbstractCollection
      */
 	public function render(): String
 	{
+        if (count($this->objs) === 0)
+            return '';
+
 		foreach ($this->objs as $obj) {
             try {
                 $this->temp .= $obj->render() . ',';

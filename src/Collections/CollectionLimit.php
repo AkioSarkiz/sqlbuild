@@ -27,6 +27,8 @@ final class CollectionLimit extends AbstractCollection
      */
     public function render(): String
     {
+        if (count($this->objs) === 0)
+            return '';
         return 'LIMIT ' .  $this->start . $this->max;
     }
 }

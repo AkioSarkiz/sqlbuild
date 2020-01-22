@@ -18,6 +18,8 @@ final class SetCollection extends AbstractCollection
      */
 	public function render(): String
 	{
+        if (count($this->objs) === 0)
+            return '';
 		$temp = 'SET';
 		foreach ($this->objs as $obj) {
 			$temp .= $obj->render() . ',';

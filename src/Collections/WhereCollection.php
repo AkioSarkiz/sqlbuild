@@ -22,6 +22,9 @@ final class WhereCollection extends AbstractCollection
      */
 	public function render (): String
 	{
+	    if (count($this->objs) === 0)
+	        return '';
+
 	    $temp = 'WHERE';
 
         foreach ($this->objs as $obj)

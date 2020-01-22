@@ -36,6 +36,8 @@ final class SelectCollection extends AbstractCollection
      */
 	public function render(): String 
 	{
+        if (count($this->objs) === 0)
+            return '';
 		if (count($this->objs) === 0) {
 		    return '*';
 		}

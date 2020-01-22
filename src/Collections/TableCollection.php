@@ -35,6 +35,8 @@ final class TableCollection extends AbstractCollection
      */
     public function render(): String
     {
+        if (count($this->objs) === 0)
+            return '';
         return '`' . implode($this->objs, '`,`') . '`';
     }
 

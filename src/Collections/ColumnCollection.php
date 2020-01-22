@@ -36,6 +36,8 @@ final class ColumnCollection extends AbstractCollection
      */
     public function render(): String
     {
+        if (count($this->objs) === 0)
+            return '';
         return '(`' . implode($this->objs, '`,`') . '`)';
     }
 }

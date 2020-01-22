@@ -18,6 +18,8 @@ final class JoinCollection extends AbstractCollection
      */
     public function render(): String
     {
+        if (count($this->objs) === 0)
+            return '';
         switch ($this->objs['operator'])
         {
             case SQLOperator::INNER:

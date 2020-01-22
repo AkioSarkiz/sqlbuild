@@ -25,6 +25,8 @@ final class GroupByCollection extends AbstractCollection
      */
     public function render(): String
     {
+        if (count($this->objs) === 0)
+            return '';
         return 'GROUP BY `' . implode('`,`', $this->objs) . '`';
     }
 }
